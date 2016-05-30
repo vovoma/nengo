@@ -157,17 +157,6 @@ class Module(nengo.Network):
         except KeyError:
             raise SpaModuleError("Could not find module input %r" % name)
 
-    def get_module_inputs(self):
-        for name, module in iteritems(self._modules):
-            for inp in module.inputs:
-                if inp == 'default':
-                    yield name
-                else:
-                    yield '%s_%s' % (name, inp)
-
-    def get_input_vocab(self, name):
-        return self.get_module_input(name)[1]
-
     def get_module_output(self, name):
         """Return the object to connect into for the given name.
 
@@ -198,17 +187,6 @@ class Module(nengo.Network):
                         raise KeyError
         except KeyError:
             raise SpaModuleError("Could not find module output %r" % name)
-
-    def get_module_outputs(self):
-        for name, module in iteritems(self._modules):
-            for output in module.outputs:
-                if output == 'default':
-                    yield name
-                else:
-                    yield '%s_%s' % (name, output)
-
-    def get_output_vocab(self, name):
-        return self.get_module_output(name)[1]
 
     def similarity(self, data, probe, vocab=None):
         """Return the similarity between the probed data and corresponding
