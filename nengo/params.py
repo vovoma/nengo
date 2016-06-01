@@ -316,8 +316,8 @@ class ShapeParam(TupleParam):
         for i, v in enumerate(value):
             if self.low is not None and v < self.low:
                 raise ValidationError(
-                    "Element %d must be >= %d (got %d)" % (
-                        i, self.low, v), attr=self.name, obj=instance)
+                    "Element %d must be >= %d (got %d)" % (i, self.low, v),
+                    attr=self.name, obj=instance)
 
 
 class DictParam(Parameter):
