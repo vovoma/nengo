@@ -141,12 +141,14 @@ def test_circular(Simulator, seed):
 
 def test_outputparam_errors(Simulator):
     with nengo.Network() as model:
-        # type errors
+        # valid values
         nengo.Node(output=lambda t: t+1)
         nengo.Node(output=0)
         nengo.Node(output=[0, 1])
         nengo.Node(output=nengo.processes.WhiteNoise())
         nengo.Node(size_in=1)
+
+        # type errors
         with pytest.raises(ValidationError):
             nengo.Node(output=object())
 
