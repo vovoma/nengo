@@ -6,7 +6,7 @@ import numpy as np
 from nengo.config import SupportDefaultsMixin
 from nengo.exceptions import NotAddedToNetworkWarning, ValidationError
 from nengo.params import (
-    CopyableObject, FrozenObject, is_param, IntParam, NumberParam,
+    FrozenObject, get_params, is_param, IntParam, NumberParam,
     Parameter, StringParam, Unconfigurable)
 from nengo.utils.compat import is_integer, range, with_metaclass
 from nengo.utils.numpy import as_shape, maxint
@@ -33,8 +33,7 @@ class NetworkMember(type):
         return inst
 
 
-class NengoObject(
-        with_metaclass(NetworkMember, SupportDefaultsMixin, CopyableObject)):
+class NengoObject(with_metaclass(NetworkMember, SupportDefaultsMixin)):
     """A base class for Nengo objects.
 
     Parameters
@@ -52,6 +51,8 @@ class NengoObject(
         The seed used for random number generation.
     """
 
+    _param_init_order = []
+
     label = StringParam('label', default=None, optional=True)
     seed = IntParam('seed', default=None, optional=True)
 
@@ -61,14 +62,32 @@ class NengoObject(
         self.seed = seed
 
     def __getstate__(self):
-        state = super(NengoObject, self).__getstate__()
+        state = self.__dict__.copy()
         del state['_initialized']
+
+        for attr in get_params(self):
+            param = getattr(self.__class__, attr)
+            if self in param:
+                state[attr] = getattr(self, attr)
+
         return state
 
     def __setstate__(self, state):
         from nengo.network import Network
-        super(NengoObject, self).__setstate__(state)
-        setattr(self, '_initialized', True)
+
+        for attr in self._param_init_order:
+            setattr(self, attr, state[attr])
+            del state[attr]
+
+        for attr in get_params(self):
+            if attr in state:
+                setattr(self, attr, state[attr])
+                del state[attr]
+
+        for k, v in state.items():
+            setattr(self, k, v)
+
+        self._initialized = True
         if len(Network.context) > 0:
             warnings.warn(
                 "{obj} was not added to the network. When copying objects, "

@@ -6,7 +6,7 @@ import pytest
 
 import nengo
 from nengo.exceptions import NetworkContextError, NotAddedToNetworkWarning
-from nengo.params import params
+from nengo.params import get_params
 from nengo.utils.compat import is_array_like, pickle
 from nengo.utils.testing import warns
 
@@ -22,7 +22,7 @@ def error_on_not_added_to_network_warning(request):
 
 def assert_is_copy(cp, original):
     assert cp is not original  # ensures separate parameters
-    for param in params(cp):
+    for param in get_params(cp):
         param_inst = getattr(cp, param)
         if isinstance(param_inst, nengo.solvers.Solver) or isinstance(
                 param_inst, nengo.base.NengoObject):
@@ -35,7 +35,7 @@ def assert_is_copy(cp, original):
 
 def assert_is_deepcopy(cp, original):
     assert cp is not original  # ensures separate parameters
-    for param in params(cp):
+    for param in get_params(cp):
         param_inst = getattr(cp, param)
         if isinstance(param_inst, nengo.solvers.Solver) or isinstance(
                 param_inst, nengo.base.NengoObject):
