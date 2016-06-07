@@ -145,8 +145,8 @@ class ConnectionFunctionParam(FunctionParam):
     def validate_array(self, conn, ndarray):
         if not isinstance(conn.eval_points, np.ndarray):
             raise ValidationError(
-                "Connection evaluation points must be explicitly set to be "
-                "an array, to set function points",
+                "In order to set 'function' to specific points, 'eval_points' "
+                "must be also be set to specific points.",
                 attr=self.name, obj=conn)
 
         if ndarray.ndim != 2:
@@ -277,7 +277,8 @@ class Connection(NengoObject):
         Function to compute across the connection. Note that ``pre`` must be
         an ensemble to apply a function across the connection.
         If an array is passed, the function is implicitly defined by the
-        array points and the provided ``eval_points``.
+        points in the array and the provided ``eval_points``, which have a
+        one-to-one correspondence.
     transform : (size_out, size_mid) array_like, optional \
                 (Default: ``np.array(1.0)``)
         Linear transform mapping the pre output to the post input.
