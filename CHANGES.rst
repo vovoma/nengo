@@ -43,6 +43,10 @@ Release History
   (`#1053 <https://github.com/nengo/nengo/pull/1053>`_,
   `#1041 <https://github.com/nengo/nengo/issues/1041>`_,
   `#1048 <https://github.com/nengo/nengo/issues/1048>`_)
+- Support a greater range of Jupyter notebook and ipywidgets versions with the
+  the ``ipynb`` extensions.
+  (`#1088 <https://github.com/nengo/nengo/pull/1088>`_,
+  `#1085 <https://github.com/nengo/nengo/issues/1085>`_)
 
 2.1.0 (April 27, 2016)
 ======================
